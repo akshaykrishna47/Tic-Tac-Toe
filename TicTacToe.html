@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            background-color: #40E0D0; /* Turquoise background */
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #2c3e50; /* Darker text color */
+        }
+
+        #startScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #startImage {
+            width: 300px; /* Adjust the width as needed */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        #modeSelection {
+            margin-bottom: 20px;
+        }
+
+        .modeButton {
+            padding: 5px 10px;
+            font-size: 1em;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #3498db; /* Professional button color */
+            color: white;
+            border: 2px solid #2980b9; /* Darker border color */
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .modeButton:hover {
+            background-color: #2980b9; /* Darker color on hover */
+        }
+
+        .pressed {
+            background-color: #2980b9 !important; /* Darker color when pressed */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #startButton {
+            padding: 10px 20px;
+            font-size: 1.5em;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #e74c3c; /* Professional button color */
+            color: white;
+            border: 2px solid #c0392b; /* Darker border color */
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+            pointer-events: none; /* Disable pointer events by default */
+        }
+
+        #startButton:hover {
+            background-color: #c0392b; /* Darker color on hover */
+        }
+
+        #board {
+            display: none;
+            grid-template-columns: repeat(3, 100px);
+            gap: 0px;
+            margin: 0 auto;
+            width: 310px; /* Adjust the width as needed */
+            margin-top: 20px;
+            border: 2px solid transparent;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: 3px solid #2c3e50; /* Tic-Tac-Toe border color */
+            font-size: 3em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell:hover {
+            background-color: #3498db; /* Darker hover background color */
+        }
+
+        #message {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #2c3e50; /* Darker text color */
+        }
+
+        #resetButton,
+        #homeButton {
+            display: none;
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #3498db; /* Professional button color */
+            color: white;
+            border: 2px solid #2980b9; /* Darker border color */
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #resetButton:hover,
+        #homeButton:hover {
+            background-color: #2980b9; /* Darker color on hover */
+        }
+
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div id="startScreen">
+        <img id="startImage" src="https://play-lh.googleusercontent.com/n3vb2UjC3bCldAzy_WayG8wAMdIspefAwQrPTgrKn6HMmTzGbyU5TELYKolQ2MxedkQD" alt="Start Image">
+        <div id="modeSelection">
+            <button id="playerButton" class="modeButton" onclick="chooseMode('2player')">2 Player</button>
+            <button id="computerButton" class="modeButton" onclick="chooseMode('computer')">Vs Computer</button>
+        </div>
+        <button id="startButton" onclick="startGame()">Start Game</button>
+    </div>
+    <div id="board"></div>
+    <div id="message"></div>
+    <div id="resetButton" onclick="resetGame()">Reset Game</div>
+    <div id="homeButton" onclick="goToStartScreen()">Home</div>
+
+    <script>
+        let currentPlayer = "X";
+        let boardState = ["", "", "", "", "", "", "", "", ""];
+        let gameMode = "";
+        let gameEnded = false;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const startScreen = document.getElementById("startScreen");
+            const board = document.getElementById("board");
+            const message = document.getElementById("message");
+            const resetButton = document.getElementById("resetButton");
+            const homeButton = document.getElementById("homeButton");
+            const startButton = document.getElementById("startButton");
+            const playerButton = document.getElementById("playerButton");
+            const computerButton = document.getElementById("computerButton");
+
+            // Function to choose the game mode
+            window.chooseMode = function (mode) {
+                gameMode = mode;
+                playerButton.classList.remove("pressed");
+                computerButton.classList.remove("pressed");
+                if (mode === "2player") {
+                    playerButton.classList.add("pressed");
+                } else if (mode === "computer") {
+                    computerButton.classList.add("pressed");
+                }
+                startButton.style.pointerEvents = "auto"; // Enable the Start Game button
+            };
+
+            // Function to start the game
+            window.startGame = function () {
+                if (gameMode !== "") {
+                    startScreen.style.display = "none";
+                    board.style.display = "grid";
+                    homeButton.style.display = "block";
+                    resetButton.style.display = gameEnded ? "block" : "none";
+                    createBoard();
+                }
+            };
+
+            // Function to reset the game
+            window.resetGame = function () {
+                boardState = ["", "", "", "", "", "", "", "", ""];
+                currentPlayer = "X";
+                createBoard();
+                message.textContent = "";
+                resetButton.style.display = "none";
+                gameEnded = false;
+            };
+
+            // Function to go back to the start screen
+            window.goToStartScreen = function () {
+                board.style.display = "none";
+                startScreen.style.display = "flex";
+                homeButton.style.display = "none";
+                resetButton.style.display = "none";
+                message.textContent = "";
+                startButton.style.pointerEvents = "none"; // Disable the Start Game button
+                resetGame();
+            };
+
+            // Function to create the Tic-Tac-Toe board
+            function createBoard() {
+                board.innerHTML = ""; // Clear the board
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.addEventListener("click", () => makeMove(i));
+                    board.appendChild(cell);
+                }
+                updateMessage();
+            }
+
+            // Function to handle a player's move
+            function makeMove(index) {
+                if (boardState[index] === "" && !checkWinner()) {
+                    boardState[index] = currentPlayer;
+                    updateBoard();
+                    if (!checkWinner()) {
+                        currentPlayer = currentPlayer === "X" ? "O" : "X";
+                        if (gameMode === "computer" && currentPlayer === "O") {
+                            makeComputerMove();
+                        }
+                        updateMessage();
+                    }
+                }
+            }
+
+             // Function to make a move for the computer (AI)
+        function makeComputerMove() {
+            const emptyCells = boardState.reduce((acc, value, index) => {
+                if (value === "") {
+                    acc.push(index);
+                }
+                return acc;
+            }, []);
+
+            if (emptyCells.length === 0) {
+                return; // Board is full
+            }
+
+            // Check if the computer can win
+            for (const index of emptyCells) {
+                const tempBoard = [...boardState];
+                tempBoard[index] = "O";
+                if (checkWinnerForPlayer("O", tempBoard)) {
+                    makeMove(index);
+                    return;
+                }
+            }
+
+            // Check if the player is about to win and block
+            for (const index of emptyCells) {
+                const tempBoard = [...boardState];
+                tempBoard[index] = "X";
+                if (checkWinnerForPlayer("X", tempBoard)) {
+                    makeMove(index);
+                    return;
+                }
+            }
+
+            // If no winning or blocking moves, make a random move
+            const randomIndex = Math.floor(Math.random() * emptyCells.length);
+            const computerMove = emptyCells[randomIndex];
+            makeMove(computerMove);
+        }
+
+        // Function to check for a winner for a specific player
+        function checkWinnerForPlayer(player, tempBoard) {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
+
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (tempBoard[a] === player && tempBoard[a] === tempBoard[b] && tempBoard[a] === tempBoard[c]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+            // Function to update the board based on the current state
+            function updateBoard() {
+                const cells = document.querySelectorAll(".cell");
+                cells.forEach((cell, index) => {
+                    cell.textContent = boardState[index];
+                    if (boardState[index] === "X") {
+                        cell.style.color = "black"; // X is black
+                    } else if (boardState[index] === "O") {
+                        cell.style.color = "white"; // O is white
+                    }
+                });
+                checkWinner();
+            }
+
+            // Function to update the message based on the game state
+            function updateMessage() {
+                if (checkWinner()) {
+                    gameEnded = true;
+                    resetButton.style.display = "block";
+                    return; // Game is already won or drawn
+                }
+
+                if (gameMode === "computer" && currentPlayer === "O") {
+                    message.textContent = "Computer is thinking...";
+                    makeComputerMove();
+                } else {
+                    message.textContent = `Player ${currentPlayer}'s turn`;
+                }
+            }
+
+            // Function to check for a winner
+            function checkWinner() {
+                const winPatterns = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                    [0, 4, 8], [2, 4, 6]             // Diagonals
+                ];
+
+                for (const pattern of winPatterns) {
+                    const [a, b, c] = pattern;
+                    if (boardState[a] !== "" && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+                        message.textContent = `Player ${currentPlayer} wins!`;
+                        highlightWinningLine(pattern);
+                        gameEnded = true;
+                        resetButton.style.display = "block";
+                        return true;
+                    }
+                }
+
+                if (!boardState.includes("")) {
+                    message.textContent = "It's a draw!";
+                    gameEnded = true;
+                    resetButton.style.display = "block";
+                    return true;
+                }
+
+                return false;
+            }
+
+            // Function to highlight the winning line
+            function highlightWinningLine(pattern) {
+                const cells = document.querySelectorAll(".cell");
+                pattern.forEach(index => cells[index].classList.add("highlight"));
+            }
+        });
+    </script>
+</body>
+</html>
