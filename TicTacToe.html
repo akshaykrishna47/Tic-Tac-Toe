@@ -9,7 +9,7 @@
         body {
             font-family: 'Press Start 2P', cursive;
             text-align: center;
-            background-color: #40E0D0; /* Turquoise background */
+            background-color: #40E0D0;
             margin: 0;
             height: 100vh;
             display: flex;
@@ -19,7 +19,7 @@
 
         h1 {
             margin-bottom: 20px;
-            color: #2c3e50; /* Darker text color */
+            color: #2c3e50; 
         }
 
         #startScreen {
@@ -29,7 +29,7 @@
         }
 
         #startImage {
-            width: 300px; /* Adjust the width as needed */
+            width: 300px;
             height: auto;
             margin-bottom: 20px;
         }
@@ -42,9 +42,9 @@
             padding: 5px 10px;
             font-size: 1em;
             font-family: 'Press Start 2P', cursive;
-            background-color: #3498db; /* Professional button color */
+            background-color: #3498db; 
             color: white;
-            border: 2px solid #2980b9; /* Darker border color */
+            border: 2px solid #2980b9; 
             border-radius: 5px;
             cursor: pointer;
             margin-right: 10px;
@@ -52,11 +52,11 @@
         }
 
         .modeButton:hover {
-            background-color: #2980b9; /* Darker color on hover */
+            background-color: #2980b9; 
         }
 
         .pressed {
-            background-color: #2980b9 !important; /* Darker color when pressed */
+            background-color: #2980b9 !important; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -64,17 +64,17 @@
             padding: 10px 20px;
             font-size: 1.5em;
             font-family: 'Press Start 2P', cursive;
-            background-color: #e74c3c; /* Professional button color */
+            background-color: #e74c3c; 
             color: white;
-            border: 2px solid #c0392b; /* Darker border color */
+            border: 2px solid #c0392b; 
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-            pointer-events: none; /* Disable pointer events by default */
+            pointer-events: none;
         }
 
         #startButton:hover {
-            background-color: #c0392b; /* Darker color on hover */
+            background-color: #c0392b; 
         }
 
         #board {
@@ -82,7 +82,7 @@
             grid-template-columns: repeat(3, 100px);
             gap: 0px;
             margin: 0 auto;
-            width: 310px; /* Adjust the width as needed */
+            width: 310px; 
             margin-top: 20px;
             border: 2px solid transparent;
         }
@@ -90,7 +90,7 @@
         .cell {
             width: 100px;
             height: 100px;
-            border: 3px solid #2c3e50; /* Tic-Tac-Toe border color */
+            border: 3px solid #2c3e50; 
             font-size: 3em;
             cursor: pointer;
             display: flex;
@@ -99,13 +99,13 @@
         }
 
         .cell:hover {
-            background-color: #3498db; /* Darker hover background color */
+            background-color: #3498db; 
         }
 
         #message {
             font-size: 1.2em;
             margin-top: 20px;
-            color: #2c3e50; /* Darker text color */
+            color: #2c3e50; 
         }
 
         #resetButton,
@@ -115,16 +115,16 @@
             padding: 5px 10px;
             font-size: 1em;
             cursor: pointer;
-            background-color: #3498db; /* Professional button color */
+            background-color: #3498db; 
             color: white;
-            border: 2px solid #2980b9; /* Darker border color */
+            border: 2px solid #2980b9;
             border-radius: 5px;
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
         #resetButton:hover,
         #homeButton:hover {
-            background-color: #2980b9; /* Darker color on hover */
+            background-color: #2980b9; 
         }
 
         .highlight {
@@ -173,7 +173,7 @@
                 } else if (mode === "computer") {
                     computerButton.classList.add("pressed");
                 }
-                startButton.style.pointerEvents = "auto"; // Enable the Start Game button
+                startButton.style.pointerEvents = "auto"; 
             };
 
             // Function to start the game
@@ -204,13 +204,13 @@
                 homeButton.style.display = "none";
                 resetButton.style.display = "none";
                 message.textContent = "";
-                startButton.style.pointerEvents = "none"; // Disable the Start Game button
+                startButton.style.pointerEvents = "none"; 
                 resetGame();
             };
 
             // Function to create the Tic-Tac-Toe board
             function createBoard() {
-                board.innerHTML = ""; // Clear the board
+                board.innerHTML = "";     // Clear  board
                 for (let i = 0; i < 9; i++) {
                     const cell = document.createElement("div");
                     cell.classList.add("cell");
@@ -245,7 +245,7 @@
             }, []);
 
             if (emptyCells.length === 0) {
-                return; // Board is full
+                return; // Board full
             }
 
             // Check if the computer can win
@@ -298,9 +298,9 @@
                 cells.forEach((cell, index) => {
                     cell.textContent = boardState[index];
                     if (boardState[index] === "X") {
-                        cell.style.color = "black"; // X is black
+                        cell.style.color = "black"; 
                     } else if (boardState[index] === "O") {
-                        cell.style.color = "white"; // O is white
+                        cell.style.color = "white"; 
                     }
                 });
                 checkWinner();
